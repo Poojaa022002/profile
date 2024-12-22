@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-header {
+            background-color: #52b1ba;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 90%;
+            object-fit: cover;
+            border: 6px solid white
+            margin-top  45px;
+        }
+
+        .profile-details h2 {
+            font-size: 1.5em;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .profile-details p, .profile-details ul {
+            color: #555;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .profile-details ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .profile-details ul li {
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            font-size: 1em;
+            color: #333;
+        }
+
+        .contact-info p span {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="C:\Users\DELL\Desktop\try\doctor\quiz\images\poojaa.png" alt="Profile Picture" class="profile-pic">
+            <h1> M.POOJAA </h1>
+            <p> Computer Science </p>
+        </div>
+        <div class="profile-details">
+            <h2>Personal details</h2>
+			<ul>
+            <li> Father name : k.Madhavan </li>
+			<li> Mother name : M.Kavitha </li>
+			<li> D.O.B : 02.02.2002 </li>
+			</ul>
+            <h2> Education </h2>
+            <ul>
+			    <li> Government Arts College(Autonomous) Kumbakonam - M.sc(CS) </li>
+                <li> Government Arts College(Autonomous) Kumbakonam - B.Sc(CS) </li>
+                <li> Sri Saraswathi Padasala Girls Higher Secondary School - 10th(63%) </li>
+				<li> Sri Saraswathi Padasala Girls Higher Secondary School - 12th(66%) </li>
+            </ul>
+            <h2> Skills </h2>
+            <ul>
+                <li> Programming Languages: Java, C++ </li>
+                <li> Web Development: HTML, CSS, JavaScript </li>
+                <li> Database Management: SQL </li>
+            </ul>
+            <h2> Contact </h2>
+            <div class="contact-info">
+                <p>Email: <span> poojaamadhavan@gmail.com </span></p>
+                <p>Phone: <span> 6383458740 </span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

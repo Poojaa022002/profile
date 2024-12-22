@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz4</title>
+    <style>
+        body {
+            background-color: #d5d5d5;
+            font-family: Arial, sans-serif;
+        }
+
+        .quiz-container {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 700px;
+            margin: 2em auto;
+            padding: 2em;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1em;
+        }
+
+        .choice {
+            font-size: 1em;
+            display: block;
+            margin: 5px 0;
+            padding: 0.7em 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: left;
+        }
+
+        .choice:hover {
+            background-color: #2980b9;
+        }
+
+        .choice.correct {
+            background-color: #2ecc71 !important;
+        }
+
+        .choice.incorrect {
+            background-color: #e74c3c !important;
+        }
+
+        #feedback {
+            margin-top: 1em;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .summary {
+            margin-top: 2em;
+        }
+
+        .summary h2 {
+            margin-bottom: 1em;
+        }
+
+        .summary-item {
+            margin-bottom: 1.5em;
+            padding: 1em;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item.correct-answer {
+            background-color: #e8f5e9;
+            border-left: 5px solid #2ecc71;
+        }
+
+        .summary-item.incorrect-answer {
+            background-color: #ffebee;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .summary-item p {
+            margin: 0.5em 0;
+        }
+
+        .correct-text {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .incorrect-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Time Speed and Distance</h1>
+        
+        <div class="question">
+            <p id="question-text">Question 1</p>
+            <div class="choices">
+                <button class="choice w-25" onclick="checkAnswer(0)">London</button>
+                <button class="choice" onclick="checkAnswer(1)">Paris</button>
+                <button class="choice" onclick="checkAnswer(2)">Nairobi</button>
+                <button class="choice" onclick="checkAnswer(3)">Kumbakonam</button>
+            </div>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+    { question: "A man travels from A to B at a speed of 30 kmph and returns with a speed of 60 kmph. What is the average speed of the man?", 
+    choices: ["47.5", "60", "40", "80"], 
+    correct: 2 },
+    { question: "Find the area of the square field if a train 800 metres long passes the field with a speed of 120 kmph in one minute.", 
+    choices: ["1.44 sq. km", "4 sq. km", "2 sq. km", "4.64 sq. km"],
+     correct: 0 },
+    { question: "How much time does a train 125 metres long running at 60 km/hr take to pass a pole?", 
+    choices: ["6s", "2.08s", "7.5s", "8s"],
+     correct: 2 },
+    { question: " If Ajay drives at 4/5th of his usual speed to his office, he is 6 minutes late. What is his usual time to reach his office?",
+     choices: ["36", "38", "40", "24"], 
+     correct: 3 },
+    { question: "If a cyclist travels at a speed of 15 km/h, how far will he travel in 4 hours?A man cycles at a rate of 4 kmph. He cycles for 45 minutes and then takes a 15 minute break. Determine the total time taken to cover 12 kms by him.",
+     choices: ["4 hours 35 minutes", "4 hours", "3 hours", "3 hours 45 minutes"], 
+     correct: 3 },
+    { question: "Speed of a man with current measures 15 km/hr. Speed of current is 2.5 km/hr. What is the speed of man against the current?", 
+    choices: ["12.5 kmph", "10 kmph", "40 kmph", "50 kmph"],
+     correct: 1 },
+    { question: " If Ajay completes a certain work in 8 days and Vijay can complete the same work in 24 days, find the time in which the work will be completed if both Ajay and Vijay work together.", 
+    choices: ["10 days", "20 days", "14 days", "6 days"], 
+    correct: 3 },
+    { question: "A starts walking at 4 kmph and 4 hours after his start B starts cycling at 10 kmph. After how much distance will B catch up with A?",
+     choices: ["26.2 km", "39.01 km", "40 km", "26.67 km"], 
+     correct: 3 },
+    { question: " Sourav walks 20 meters towards North. He then turns left and walks 40 meters. He again turns left and walks 20 meters. Further, he moves 20 meters after turning to right. How far is he from his original position?",
+     choices: ["48 meters", "60 meters", "15 meters", "80 meters"],
+      correct: 1 },
+];
+
+let currentQuestion = 0;
+let correctAnswers = 0;
+const userSelections = [];
+
+function showQuestion() {
+    const questionText = document.getElementById("question-text");
+    questionText.textContent = `Question ${currentQuestion + 1}: ${questions[currentQuestion].question}`;
+
+    const choices = document.querySelectorAll(".choice");
+    choices.forEach((choice, index) => {
+        choice.textContent = questions[currentQuestion].choices[index];
+        choice.classList.remove("correct", "incorrect");
+        choice.disabled = false; 
+    });
+
+    const feedback = document.getElementById("feedback");
+    feedback.textContent = "";
+}
+
+function checkAnswer(selected) {
+    const choices = document.querySelectorAll(".choice");
+    const feedback = document.getElementById("feedback");
+    const correctIndex = questions[currentQuestion].correct;
+
+    userSelections.push({
+        question: questions[currentQuestion].question,
+        selected: selected,
+        correct: correctIndex
+    });
+
+    
+    choices.forEach((choice, index) => {
+        choice.disabled = true;
+        if (index === correctIndex) {
+            choice.classList.add("correct"); 
+        }
+    });
+
+    if (selected === correctIndex) {
+        feedback.textContent = "Correct!";
+        correctAnswers++;
+    } else {
+        feedback.textContent = "Incorrect!";
+        choices[selected].classList.add("incorrect");
+    }
+
+    setTimeout(() => {
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            showSummary();
+        }
+    }, 2000); 
+}
+function showSummary() {
+const quizContainer = document.querySelector(".quiz-container");
+quizContainer.innerHTML = `
+<h2>Quiz Summary</h2>
+<table class="summary-table" border="1" cellspacing="0" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+        </tr>
+    </thead>
+    <tbody class="summary"></tbody>
+</table>
+`;
+
+const summaryTable = document.querySelector(".summary");
+
+userSelections.forEach((selection, index) => {
+const questionObj = questions[index];
+const isCorrect = selection.selected === selection.correct;
+
+const row = document.createElement("tr");
+row.innerHTML = `
+    <td>${selection.question}</td>
+    <td class="${isCorrect ? 'correct-text' : 'incorrect-text'}">${questionObj.choices[selection.selected]}</td>
+    <td>${questionObj.choices[selection.correct]}</td>
+`;
+
+summaryTable.appendChild(row);
+});
+
+const totalCorrect = document.createElement("p");
+totalCorrect.innerHTML = `<strong>You got ${correctAnswers} out of ${questions.length} questions correct.</strong>`;
+totalCorrect.style.fontSize = "1.2em";
+totalCorrect.style.marginTop = "1.5em";
+quizContainer.appendChild(totalCorrect);
+}
+
+showQuestion();
+    </script>
+</body>
+</html>

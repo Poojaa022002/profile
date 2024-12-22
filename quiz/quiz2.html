@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz2</title>
+    <style>
+        body {
+            background-color: #d5d5d5;
+            font-family: Arial, sans-serif;
+        }
+
+        .quiz-container {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 700px;
+            margin: 2em auto;
+            padding: 2em;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1em;
+        }
+
+        .choice {
+            font-size: 1em;
+            display: block;
+            margin: 5px 0;
+            padding: 0.7em 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: left;
+        }
+
+        .choice:hover {
+            background-color: #2980b9;
+        }
+
+        .choice.correct {
+            background-color: #2ecc71 !important;
+        }
+
+        .choice.incorrect {
+            background-color: #e74c3c !important;
+        }
+
+        #feedback {
+            margin-top: 1em;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .summary {
+            margin-top: 2em;
+        }
+
+        .summary h2 {
+            margin-bottom: 1em;
+        }
+
+        .summary-item {
+            margin-bottom: 1.5em;
+            padding: 1em;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item.correct-answer {
+            background-color: #e8f5e9;
+            border-left: 5px solid #2ecc71;
+        }
+
+        .summary-item.incorrect-answer {
+            background-color: #ffebee;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .summary-item p {
+            margin: 0.5em 0;
+        }
+
+        .correct-text {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .incorrect-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Time Speed and Distance</h1>
+        
+        <div class="question">
+            <p id="question-text">Question 1</p>
+            <div class="choices">
+                <button class="choice w-25" onclick="checkAnswer(0)">London</button>
+                <button class="choice" onclick="checkAnswer(1)">Paris</button>
+                <button class="choice" onclick="checkAnswer(2)">Nairobi</button>
+                <button class="choice" onclick="checkAnswer(3)">Kumbakonam</button>
+            </div>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+    { question: "Divyam finishes a 540 m long road in 8 minutes. What is his speed in km per hour?", 
+    choices: ["4.05", "5.20", "8.42", "10.5"], 
+    correct: 0 },
+    { question: "A Helicopter covers a certain distance at a speed of 300kmph in 7 hours. To cover the same distance in 2 5/3 hours, it must travel at a speed of :", 
+    choices: ["300.45kmp", "572.72kmp", "600.72kmp", "720.56kmp"],
+     correct: 1 },
+    { question: "Suvarna runs early in the morning at 20 km/hr instead of 15 km/hr, she would have run 30 km more. Find the actual distance traveled by her :", 
+    choices: ["50km", "60km", "90km", "70km"],
+     correct: 2 },
+    { question: "A car can travel 30% faster than a bus. Car and bus both start from point P at the same time and reach point Q 55 kms away from P at the same time. On the way, however, the car lost about 9.5 minutes while stopping at the traffic. The speed of the bus is : ?",
+     choices: ["80kmph", "80.31kmph", "20.09kmph", "30.50kmph"], 
+     correct: 1 },
+    { question: "When there are no stoppages, the speed of a school van is 40 kmph and when there are many stoppages, it is 25 kmph. For how many minutes does the school van stop per hour?",
+     choices: ["9", "10", "12", "20"], 
+     correct: 1 },
+    { question: "During a trip of 400 km, an airplane was slowed down due to the monsoon. Its average speed for the trip was reduced by 150 km/hr and the time of the airplane increased by 30 minutes. The duration of the airplane is :", 
+    choices: ["5/6hrs", "2/5hrs", "3/7hrs", "4/3hrs"],
+     correct: 0 },
+    { question: "Sudhir completes a journey in 6 hours. He travels the first half of the journey at the rate of 18 km/hr and second half at the rate of 21 km/hr. Find his total journey in km?", 
+    choices: ["123.42 km", "224.43 km", "130.22 km", "18.09 km"], 
+    correct: 0 },
+    { question: "The ratio between the speeds of two bikes is 4 : 5. If the second car runs 250 km in 3 hours, then the speed of the first car is :?",
+     choices: ["300.02 kmph", "112.84 kmph", "170.89 kmph", "111.08 kmph"], 
+     correct: 3 },
+    { question: "Alia and her family go on tour, traveling first 175 km at 75 km/hr and the next 175 km at 95 km/hr. The average speed for the first 350 km of the tour is :",
+     choices: ["35.55km/hr", "40 km/hr", "36 km/hr", "83.83 km/hr"],
+      correct: 3 },
+];
+
+let currentQuestion = 0;
+let correctAnswers = 0;
+const userSelections = [];
+
+function showQuestion() {
+    const questionText = document.getElementById("question-text");
+    questionText.textContent = `Question ${currentQuestion + 1}: ${questions[currentQuestion].question}`;
+
+    const choices = document.querySelectorAll(".choice");
+    choices.forEach((choice, index) => {
+        choice.textContent = questions[currentQuestion].choices[index];
+        choice.classList.remove("correct", "incorrect");
+        choice.disabled = false; 
+    });
+
+    const feedback = document.getElementById("feedback");
+    feedback.textContent = "";
+}
+
+function checkAnswer(selected) {
+    const choices = document.querySelectorAll(".choice");
+    const feedback = document.getElementById("feedback");
+    const correctIndex = questions[currentQuestion].correct;
+
+    userSelections.push({
+        question: questions[currentQuestion].question,
+        selected: selected,
+        correct: correctIndex
+    });
+
+    
+    choices.forEach((choice, index) => {
+        choice.disabled = true;
+        if (index === correctIndex) {
+            choice.classList.add("correct"); 
+        }
+    });
+
+    if (selected === correctIndex) {
+        feedback.textContent = "Correct!";
+        correctAnswers++;
+    } else {
+        feedback.textContent = "Incorrect!";
+        choices[selected].classList.add("incorrect");
+    }
+
+    setTimeout(() => {
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            showSummary();
+        }
+    }, 2000); 
+}
+function showSummary() {
+const quizContainer = document.querySelector(".quiz-container");
+quizContainer.innerHTML = `
+<h2>Quiz Summary</h2>
+<table class="summary-table" border="1" cellspacing="0" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+        </tr>
+    </thead>
+    <tbody class="summary"></tbody>
+</table>
+`;
+
+const summaryTable = document.querySelector(".summary");
+
+userSelections.forEach((selection, index) => {
+const questionObj = questions[index];
+const isCorrect = selection.selected === selection.correct;
+
+const row = document.createElement("tr");
+row.innerHTML = `
+    <td>${selection.question}</td>
+    <td class="${isCorrect ? 'correct-text' : 'incorrect-text'}">${questionObj.choices[selection.selected]}</td>
+    <td>${questionObj.choices[selection.correct]}</td>
+`;
+
+summaryTable.appendChild(row);
+});
+
+const totalCorrect = document.createElement("p");
+totalCorrect.innerHTML = `<strong>You got ${correctAnswers} out of ${questions.length} questions correct.</strong>`;
+totalCorrect.style.fontSize = "1.2em";
+totalCorrect.style.marginTop = "1.5em";
+quizContainer.appendChild(totalCorrect);
+}
+
+showQuestion();
+    </script>
+</body>
+</html>
